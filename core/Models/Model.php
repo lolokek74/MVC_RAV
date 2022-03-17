@@ -16,22 +16,22 @@ abstract class Model extends \mysqli
         $this->set_charset('UTF-8');
     }
 
+
     /**
-     * Выгрузка данных из таблицы БД
+     * Выгрузка данных из таблицы базы данных
+     *
      * @param array $columns - массив колонок, которые нужно получить
      * @return mixed
-    */
-
-    public function get($columns =[])
+     */
+    public function get($columns = [])
     {
-        $nameColumns = ($columns ? implode(',', $columns): '*');
-        # Создаем базовый запрос на выгрузку всех жанных из данной таблицы
+        $nameColumns = ($columns ? implode(',', $columns) : '*');
+        # Создаем базовый запрос на выгрузку всех данных из данной таблицы
         $this->inquiry = "SELECT {$nameColumns} FROM `{$this->table}`";
         # Добавляем если существуют JOIN соединения
         $this->inquiry .= $this->join_query;
-        # Добавление Where если они прописаны
+        # Добавления Where если они прописаны
         $this->inquiry .= !$this->where_query ? '' : 'WHERE ' . $this->where_query;
-
 
         # Удаление после выполнения!!!!
         return $this->query($this->inquiry)->fetch_all(MYSQLI_ASSOC);
@@ -107,15 +107,15 @@ abstract class Model extends \mysqli
     }
 
     /**
-     * Соединение таблиц с СУБД
-     * Используется join
+     * Соединение таблиц в СУБД
+     * Используется JOIN
      *
      * @param $table - Название таблицы
-     * @param $compound - Массив вида ('НазваниеКолонкиОсновнойТаблицы', 'НазваниеКолонкиСоединяемойТаблицы')
-     * */
+     * @param $compound - Массив вида ['НазваниеКолонкиОсновнойТаблицы', 'НазваниеКолонкиСоединяемойТаблицы']
+     */
     public function join($table, $compound)
     {
-        $this->join_query .= " JOIN `{$table}` ON `{$this->table}`.`{$compound[0]}` = `{$table}`.`{$compound[1]}` ";
+        $this->join_query .= " JOIN `{$table}` ON `{$this->table}`.`{$compound[0]}` = `{$table}`.`{$compound[1]}`";
     }
 
     public function __destruct()
